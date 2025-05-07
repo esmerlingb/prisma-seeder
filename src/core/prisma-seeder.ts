@@ -18,29 +18,31 @@ export class PrismaSeeder<T extends PrismaClientLike> {
   constructor(private readonly options: PrismaSeederOptions<T>) {
     this.program
       .command('up')
-      .description('Run seed up')
+      .description('Applies pending seeds')
       .option('-n, --name <names...>', 'Specify seed names')
       .option('-s, --steps <number>', 'Specify number of steps', parseInt)
       .action(async (options: CommandOptions) => await this.handleOperation('up', options))
 
     this.program
       .command('down')
-      .description('Rollback latest seeds')
+      .description('Revert seeds')
       .option('-n, --name <names...>', 'Specify seed names')
       .option('-s, --steps <number>', 'Specify number of steps', parseInt)
       .action(async (options: CommandOptions) => await this.handleOperation('down', options))
 
     this.program
       .command('refresh')
-      .description('Re-run seeds. This command re-applies seeds from the start, skipping any rollback process')
+      .description('Re-applies seeds skipping rollback')
       .requiredOption('-n, --name <names...>', 'Specify seed names')
       .action(async (options: CommandOptions) => await this.handleOperation('refresh', options))
 
     this.program
       .command('reset')
-      .description('It rollback and the re-apply for the specified seeds')
+      .description('Rollback and re-applies seeds')
       .requiredOption('-n, --name <names...>', 'Specify seed names')
       .action(async (options: CommandOptions) => await this.handleOperation('reset', options))
+
+    this.program.addHelpText('after', '\nFor detailed help about a specific command, use: seed [command] -h')
   }
 
   async run() {

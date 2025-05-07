@@ -2,7 +2,7 @@
   "name": "prisma-seeder",
   "version": "1.0.0",
   "packageManager": "pnpm@9.12.0",
-  "description": "",
+  "description": "Adds seeding support to Prisma ORM for populating your database with initial data.",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsup"
