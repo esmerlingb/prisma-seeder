@@ -62,7 +62,7 @@ Add this command in the `"seed"` key in the `"prisma"` key of your `package.json
 
 ## Command Line Interface Usage
 
-You can use `tsx prisma/seed.ts --help` to see how to use it. It will print something like:
+You can run `tsx prisma/seed.ts --help` to see how to use it. It will print something like:
 ```
 Usage: seed [options] [command] ...
 
@@ -79,9 +79,9 @@ For detailed help about a specific command, use: seed [command] -h
 ```
 
 
-### Running seeds
+### Running seeds: `up`
 
-`tsx prisma/seed.ts up` Applies pending seeds. Use `tsx prisma/seed.ts --help` to see all available options.
+Run `tsx prisma/seed.ts up` to apply pending seeds. Use `tsx prisma/seed.ts --help` to see all available options.
 
 ```
 Usage: seed up [options]
@@ -94,8 +94,8 @@ Options:
   -h, --help             display help for command
 ```
 
-### Revert seeds
-`tsx prisma/seed.ts down` Revert seeds. You should provide one of the options `--name` or `--steps` to select the seeds to revert.
+### Running seeds: `down`
+Run `tsx prisma/seed.ts down` to revert seeds. You should provide one of the options `--name` or `--steps` to select the seeds to revert.
 
 Use `tsx prisma/seed.ts --help` to see all available options.
 
@@ -110,9 +110,11 @@ Options:
   -h, --help             display help for command
 ```
 
-### Refresh seeds
+### Refresh seeds: `refresh`
 
-Re-applies seeds skipping any rollback process. The `--name` option is required; otherwise, no seeds will be refreshed
+Run `tsx prisma/seed.ts refresh` to re-applies seeds skipping any rollback process. The `--name` option is required; otherwise, no seeds will be refreshed.
+
+Use `tsx prisma/seed.ts refresh --help` to see all available options. 
 
 ```
 Usage: seed refresh [options]
@@ -125,3 +127,18 @@ Options:
   ```
 
 > **_Note:_** For this command to work, the seed must be idempotent—meaning it should be able to run multiple times without failing. For example, use `upsert` instead of `create`.
+
+
+### Reset Seeds: `reset`
+
+Run `tsx prisma/seed.ts reset` to rollback and re-apply seeds. Is the same as running `down` and `up`.
+
+```
+Usage: seed reset [options]
+
+Rollback and re-applies seeds
+
+Options:
+  -n, --name <names...>  Specify seed names
+  -h, --help             display help for command
+```
