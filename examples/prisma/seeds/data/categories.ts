@@ -5,7 +5,8 @@ interface Category {
 
 export const categories: Category[] = [
   {
-    id: '61ba3e3b-2fbe-4ede-b4d4-d39cbf9e7c4c', // Use a constant id to make the seed idempotent
+    // Use a constant id to make the seed idempotent
+    id: '61ba3e3b-2fbe-4ede-b4d4-d39cbf9e7c4c',
     name: 'Elf'
   },
   {

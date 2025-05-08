@@ -6,15 +6,14 @@ Write seeds with familiar `up` and `down` functions——just like classic migra
 
 ## Usage
 
-Install with npm
+1. Install with npm
 ```bash
 npm install prisma-seeder
 ```
 
-Add `PrismaSeeds` model. We use it to keep track of already executed seeds.
+2. Add `PrismaSeeds` model. We use it to keep track of already executed seeds.
 ```prisma
-// prisma/schema.prisma
-
+// schema.prisma
 model PrismaSeeds {
   name String @id()
 
@@ -23,14 +22,14 @@ model PrismaSeeds {
 }
 ```
 
-Run migrations
+3. Run migrations
 ```
 prisma migrate dev
 ```
 
-This script is a runnable CLI program. Check the available options under [CLI](#command-line-interface)
+4. Create a new file named `seed.ts`. This can be placed anywhere within your project's folder structure. The example below places it in the `/prisma` folder. This script is a runnable CLI program. Check the available options under [CLI](#command-line-interface)
 ```ts
-// prisma/seed.ts
+// seed.ts
 import { PrismaSeeder } from 'prisma-seeder'
 import { PrismaClient } from '@prisma/client'
 import path from 'path'
@@ -55,7 +54,7 @@ async function main() {
 main()
 ```
 
-Add this command in the `"seed"` key in the `"prisma"` key of your `package.json` file. Prisma executes the seeds manually with `prisma db seed` and automatically in `prisma migrate reset` and (in some scenarios) `prisma migrate dev`
+5. Add this command in the `"seed"` key in the `"prisma"` key of your `package.json` file. Prisma executes the seeds manually with `prisma db seed` and automatically in `prisma migrate reset` and (in some scenarios) `prisma migrate dev`
 ```JSON
 "prisma": {
   "seed": "tsx prisma/seed.ts up"
@@ -160,4 +159,92 @@ Options:
   -n, --name <name...>  Name of the seed file
   -d, --dir <dir>       Directory to save the seed file
   -h, --help            display help for command
+```
+
+## Examples
+
+### Seeding your database
+
+We are going to seed our `Category` model
+```prisma
+model Category {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String @unique()
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```
+
+1. Create a new file with seed data
+```ts
+// categories.ts
+interface Category {
+  id: string
+  name: string
+}
+
+export const categories: Category[] = [
+  {
+    // Use a constant id to make the seed idempotent
+    id: '61ba3e3b-2fbe-4ede-b4d4-d39cbf9e7c4c', 
+    name: 'Elf'
+  },
+  {
+    id: 'e9620577-af7f-4eaa-abea-1724ce95aa84',
+    name: 'Dryad'
+  },
+  {
+    id: 'cb1e2ec1-a5b5-4330-ae85-4e0a046f50e9',
+    name: 'Gnome'
+  }
+]
+
+```
+
+2. Generate the new seed with `up` & `down` functions
+```bash
+tsx prisma/seed.ts generate --name add_categories
+````
+
+3. Update the generated seed
+```ts
+import { PrismaClient } from '@prisma/client'
+import { categories } from './data/categories.js'
+
+type Db = PrismaClient
+
+export const up = async (db: Db) => {
+  // Use transaction to make sure all operation succeed
+  await db.$transaction(
+    categories.map((category) =>
+      /**
+       * Use upsert to be able to run this seed multiple times by using "refresh" command
+       * We can create/update categories and use "refresh" command to update table with new data
+       */
+      db.category.upsert({
+        where: { id: category.id },
+        create: category,
+        update: { name: category.name }
+      })
+    )
+  )
+}
+
+export const down = async (db: Db) => {
+  await db.category.deleteMany({
+    where: {
+      id: {
+        in: categories.map((category) => category.id)
+      }
+    }
+  })
+}
+
+```
+
+
+4. To seed the database, run the `seed up` CLI command:
+```bash
+tsx prisma/seed.ts up
 ```
