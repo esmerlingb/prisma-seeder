@@ -38,4 +38,13 @@ export class SeedsService {
     const ext = path.extname(seedPath)
     return path.basename(seedPath, ext)
   }
+
+  getSeedTemplate = () => {
+    return (
+      "import { PrismaClient } from '@prisma/client'\n\n" +
+      'type Db = PrismaClient\n\n' +
+      'export const up = async (db: Db) => {}\n\n' +
+      'export const down = async (db: Db) => {}\n'
+    )
+  }
 }

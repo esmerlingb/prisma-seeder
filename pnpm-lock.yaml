@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@prisma/client':
-        specifier: '>=4.0.0'
-        version: 6.7.0(typescript@5.6.3)
       commander:
         specifier: ^13.1.0
         version: 13.1.0
@@ -18,12 +15,18 @@ importers:
         specifier: ^11.0.1
         version: 11.0.2
     devDependencies:
+      '@prisma/client':
+        specifier: ^6.7.0
+        version: 6.7.0(prisma@6.7.0(typescript@5.6.3))(typescript@5.6.3)
       '@types/node':
         specifier: ^22.15.3
         version: 22.15.3
       prettier:
         specifier: ^3.3.3
         version: 3.5.3
+      prisma:
+        specifier: ^6.7.0
+        version: 6.7.0(typescript@5.6.3)
       tslib:
         specifier: ^2.7.0
         version: 2.8.1
@@ -227,6 +230,24 @@ packages:
       typescript:
         optional: true
 
+  '@prisma/config@6.7.0':
+    resolution: {integrity: sha512-di8QDdvSz7DLUi3OOcCHSwxRNeW7jtGRUD2+Z3SdNE3A+pPiNT8WgUJoUyOwJmUr5t+JA2W15P78C/N+8RXrOA==}
+
+  '@prisma/debug@6.7.0':
+    resolution: {integrity: sha512-RabHn9emKoYFsv99RLxvfG2GHzWk2ZI1BuVzqYtmMSIcuGboHY5uFt3Q3boOREM9de6z5s3bQoyKeWnq8Fz22w==}
+
+  '@prisma/engines-version@6.7.0-36.3cff47a7f5d65c3ea74883f1d736e41d68ce91ed':
+    resolution: {integrity: sha512-EvpOFEWf1KkJpDsBCrih0kg3HdHuaCnXmMn7XFPObpFTzagK1N0Q0FMnYPsEhvARfANP5Ok11QyoTIRA2hgJTA==}
+
+  '@prisma/engines@6.7.0':
+    resolution: {integrity: sha512-3wDMesnOxPrOsq++e5oKV9LmIiEazFTRFZrlULDQ8fxdub5w4NgRBoxtWbvXmj2nJVCnzuz6eFix3OhIqsZ1jw==}
+
+  '@prisma/fetch-engine@6.7.0':
+    resolution: {integrity: sha512-zLlAGnrkmioPKJR4Yf7NfW3hftcvqeNNEHleMZK9yX7RZSkhmxacAYyfGsCcqRt47jiZ7RKdgE0Wh2fWnm7WsQ==}
+
+  '@prisma/get-platform@6.7.0':
+    resolution: {integrity: sha512-i9IH5lO4fQwnMLvQLYNdgVh9TK3PuWBfQd7QLk/YurnAIg+VeADcZDbmhAi4XBBDD+hDif9hrKyASu0hbjwabw==}
+
   '@rollup/rollup-android-arm-eabi@4.40.1':
     resolution: {integrity: sha512-kxz0YeeCrRUHz3zyqvd7n+TVRlNyTifBsmnmNPtk3hQURUyG9eAB+usz6DAwagMusjx/zb3AjvDUvhFGDAexGw==}
     cpu: [arm]
@@ -413,6 +434,11 @@ packages:
   emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
 
+  esbuild-register@3.6.0:
+    resolution: {integrity: sha512-H2/S7Pm8a9CL1uhp9OvjwrBh5Pvx0H8qVOxNu8Wed9Y7qv56MPtq+GGM8RJpq6glYJn9Wspr8uw7l55uyinNeg==}
+    peerDependencies:
+      esbuild: '>=0.12 <1'
+
   esbuild@0.25.3:
     resolution: {integrity: sha512-qKA6Pvai73+M2FtftpNKRxJ78GIjmFXFxd/1DVBqGo/qNhLSfv+G12n9pNoWdytJC8U00TrViOwpjT0zgqQS8Q==}
     engines: {node: '>=18'}
@@ -556,6 +582,16 @@ packages:
     resolution: {integrity: sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==}
     engines: {node: '>=14'}
     hasBin: true
+
+  prisma@6.7.0:
+    resolution: {integrity: sha512-vArg+4UqnQ13CVhc2WUosemwh6hr6cr6FY2uzDvCIFwH8pu8BXVv38PktoMLVjtX7sbYThxbnZF5YiR8sN2clw==}
+    engines: {node: '>=18.18'}
+    hasBin: true
+    peerDependencies:
+      typescript: '>=5.1.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
@@ -798,9 +834,38 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@prisma/client@6.7.0(typescript@5.6.3)':
+  '@prisma/client@6.7.0(prisma@6.7.0(typescript@5.6.3))(typescript@5.6.3)':
     optionalDependencies:
+      prisma: 6.7.0(typescript@5.6.3)
       typescript: 5.6.3
+
+  '@prisma/config@6.7.0':
+    dependencies:
+      esbuild: 0.25.3
+      esbuild-register: 3.6.0(esbuild@0.25.3)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@prisma/debug@6.7.0': {}
+
+  '@prisma/engines-version@6.7.0-36.3cff47a7f5d65c3ea74883f1d736e41d68ce91ed': {}
+
+  '@prisma/engines@6.7.0':
+    dependencies:
+      '@prisma/debug': 6.7.0
+      '@prisma/engines-version': 6.7.0-36.3cff47a7f5d65c3ea74883f1d736e41d68ce91ed
+      '@prisma/fetch-engine': 6.7.0
+      '@prisma/get-platform': 6.7.0
+
+  '@prisma/fetch-engine@6.7.0':
+    dependencies:
+      '@prisma/debug': 6.7.0
+      '@prisma/engines-version': 6.7.0-36.3cff47a7f5d65c3ea74883f1d736e41d68ce91ed
+      '@prisma/get-platform': 6.7.0
+
+  '@prisma/get-platform@6.7.0':
+    dependencies:
+      '@prisma/debug': 6.7.0
 
   '@rollup/rollup-android-arm-eabi@4.40.1':
     optional: true
@@ -924,6 +989,13 @@ snapshots:
   emoji-regex@8.0.0: {}
 
   emoji-regex@9.2.2: {}
+
+  esbuild-register@3.6.0(esbuild@0.25.3):
+    dependencies:
+      debug: 4.4.0
+      esbuild: 0.25.3
+    transitivePeerDependencies:
+      - supports-color
 
   esbuild@0.25.3:
     optionalDependencies:
@@ -1062,6 +1134,16 @@ snapshots:
       tsx: 4.19.4
 
   prettier@3.5.3: {}
+
+  prisma@6.7.0(typescript@5.6.3):
+    dependencies:
+      '@prisma/config': 6.7.0
+      '@prisma/engines': 6.7.0
+    optionalDependencies:
+      fsevents: 2.3.3
+      typescript: 5.6.3
+    transitivePeerDependencies:
+      - supports-color
 
   punycode@2.3.1: {}
 

@@ -3,6 +3,7 @@ import { PrismaClientLike } from '../types'
 export interface GetSeedsInputs {
   name?: string[]
   steps?: number
+  dir?: string
 }
 
 export interface PrismaSeedModule<T extends PrismaClientLike> {
@@ -17,6 +18,6 @@ export interface SeedOperationOptions<T extends PrismaClientLike> {
 
 export interface SeedOperation {
   run: (inputs: GetSeedsInputs) => Promise<void>
-  getSeeds: (inputs: GetSeedsInputs) => Promise<string[]>
-  handleSeed: (path: string) => Promise<void>
+  getSeeds?: (inputs: GetSeedsInputs) => Promise<string[]>
+  handleSeed?: (path: string) => Promise<void>
 }

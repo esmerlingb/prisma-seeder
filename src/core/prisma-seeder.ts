@@ -10,6 +10,7 @@ export interface PrismaSeederOptions<T extends PrismaClientLike> {
 interface CommandOptions {
   name?: string[]
   steps?: number
+  dir?: string
 }
 
 export class PrismaSeeder<T extends PrismaClientLike> {
@@ -41,6 +42,13 @@ export class PrismaSeeder<T extends PrismaClientLike> {
       .description('Rollback and re-applies seeds')
       .requiredOption('-n, --name <names...>', 'Specify seed names')
       .action(async (options: CommandOptions) => await this.handleOperation('reset', options))
+
+    this.program
+      .command('generate')
+      .description('Generate a new seed file')
+      .option('-n, --name <name...>', 'Name of the seed file')
+      .option('-d, --dir <dir>', 'Directory to save the seed file')
+      .action(async (options: CommandOptions) => await this.handleOperation('generate', options))
 
     this.program.addHelpText('after', '\nFor detailed help about a specific command, use: seed [command] -h')
   }

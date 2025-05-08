@@ -1,12 +1,13 @@
 import { SeedsService } from '../seeds.service'
 import { PrismaClientLike } from '../types'
 import { SeedDown } from './seed-down'
+import { SeedGenerate } from './seed-generate'
 import { SeedRefresh } from './seed-refresh'
 import { SeedReset } from './seed-reset'
 import { SeedUp } from './seed-up'
 import { SeedOperation, SeedOperationOptions } from './types'
 
-export type SeedOperationType = 'up' | 'down' | 'refresh' | 'reset'
+export type SeedOperationType = 'up' | 'down' | 'refresh' | 'reset' | 'generate'
 
 export const getSeedOperation = <T extends PrismaClientLike>(
   operation: SeedOperationType,
@@ -22,6 +23,8 @@ export const getSeedOperation = <T extends PrismaClientLike>(
       return new SeedRefresh(options, seedsService)
     case 'reset':
       return new SeedReset(options, seedsService)
+    case 'generate':
+      return new SeedGenerate(options, seedsService)
     default:
       throw new Error(`Unsupported seed operation: ${operation}`)
   }
