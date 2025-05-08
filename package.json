@@ -1,6 +1,6 @@
 {
   "name": "prisma-seeder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "packageManager": "pnpm@9.12.0",
   "description": "Adds seeding support to Prisma ORM for populating your database with initial data.",
   "main": "dist/index.js",
@@ -21,6 +21,10 @@
     "schema": "./examples/prisma/schema.prisma"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esmerlingb/prisma-seeder.git"
+  },
   "peerDependencies": {
     "@prisma/client": ">=4.0.0"
   },
