@@ -19,6 +19,7 @@ Take control of your Prisma seeds. Write seeds with `up` and `down` functions, j
 - [Command Line Interface](#command-line-interface)
 - [Typing seeds](#typing-seeds)
 - [Example: seeding your database](#example-seeding-your-database)
+- [Seeds per environment](#seeds-per-environment)
 - [Troubleshooting](#troubleshooting)
 
 ## Requirements
@@ -507,6 +508,103 @@ export const down: Seed = async (db) => {
 ```bash
 tsx prisma/seed.ts up
 ```
+
+## Seeds per environment
+
+Some seeds belong everywhere, such as a list of categories that production needs. Others only belong in some environments, such as fake data for tests. Put each group in its own folder and give each folder its own seed script.
+
+A seed script only sees the seeds its `seeds` glob pattern matches. `*` doesn't match subfolders, so `seeds/*.ts` doesn't match `seeds/test/*.ts`. Every command (`up`, `down`, `refresh`, `reset` and `generate`) stays within its script's folder. All scripts record their seeds in the same `_prisma_seeds` table.
+
+```
+prisma/
+  db.ts
+  seed.ts         # seeds/*.ts: every environment, including production
+  seed.test.ts    # seeds/test/*.ts: test only
+  seeds/
+    20250507135916_add_categories.ts
+    test/
+      20250601093000_add_fake_users.ts
+```
+
+1. Move the client to its own file so both scripts share it. The `Register` declaration goes with it.
+
+```ts
+// prisma/db.ts
+import { PrismaClient } from '@prisma/client'
+
+export const db = new PrismaClient()
+
+declare module 'prisma-seeder' {
+  interface Register {
+    client: typeof db
+  }
+}
+```
+
+2. Create one seed script per folder. They only differ in their glob pattern.
+
+```ts
+// prisma/seed.ts
+import path from 'path'
+import { PrismaSeeder } from 'prisma-seeder'
+import { db } from './db'
+
+async function main() {
+  const seeder = new PrismaSeeder({
+    client: db,
+    seeds: path.join(__dirname, './seeds/*.{ts,js}')
+  })
+
+  await seeder.run()
+
+  process.exit()
+}
+
+main()
+```
+
+```ts
+// prisma/seed.test.ts
+import path from 'path'
+import { PrismaSeeder } from 'prisma-seeder'
+import { db } from './db'
+
+async function main() {
+  const seeder = new PrismaSeeder({
+    client: db,
+    seeds: path.join(__dirname, './seeds/test/*.{ts,js}')
+  })
+
+  await seeder.run()
+
+  process.exit()
+}
+
+main()
+```
+
+3. Add a script per environment to your `package.json`. The test script applies the shared seeds first and then the test seeds.
+
+```json
+"scripts": {
+  "seed": "tsx prisma/seed.ts up",
+  "seed:test": "tsx prisma/seed.ts up && tsx prisma/seed.test.ts up"
+}
+```
+
+Run each command through the script for that folder:
+
+```bash
+# Creates the seed in prisma/seeds/test
+tsx prisma/seed.test.ts generate --name add_fake_users
+
+# Reverts the latest test seed, never a shared one
+tsx prisma/seed.test.ts down
+```
+
+> **Note:** Keep the glob patterns one level deep, such as `seeds/*.ts`. A recursive pattern such as `seeds/**/*.ts` also matches the `test` folder, and test seeds would then run everywhere. Seeds run in timestamp order within each script, not across scripts.
+
+Use the same pattern for any other environment, such as a `seeds/production` folder with a `seed.production.ts` script.
 
 ## Troubleshooting
 
