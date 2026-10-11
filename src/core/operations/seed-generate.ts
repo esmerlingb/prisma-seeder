@@ -3,16 +3,11 @@ import path from 'node:path'
 import readline from 'node:readline/promises'
 import { PrismaSeederOptions } from '../prisma-seeder'
 import { SeedsService } from '../seeds.service'
-import { PrismaClientLike } from '../types'
+import { SeederClient } from '../types'
 import { GetSeedsInputs, SeedOperation } from './types'
 import { getCurrentTimestamp } from './utils'
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-})
-
-export class SeedGenerate<T extends PrismaClientLike> implements SeedOperation {
+export class SeedGenerate<T extends SeederClient> implements SeedOperation {
   constructor(
     private readonly options: PrismaSeederOptions<T>,
     private readonly seedsService: SeedsService
@@ -20,10 +15,20 @@ export class SeedGenerate<T extends PrismaClientLike> implements SeedOperation {
 
   async run({ name, dir }: GetSeedsInputs): Promise<void> {
     const seedsPath = dir ?? path.dirname(this.options.seeds)
-    const rawNames = name ?? [await rl.question('Seed name: ')]
+    const rawNames = name ?? [await this.askName()]
 
     for (const rawName of rawNames) {
       await this.createSeed(rawName, seedsPath)
+    }
+  }
+
+  // Opened only when needed: an open prompt keeps the process alive
+  private async askName() {
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
+    try {
+      return await rl.question('Seed name: ')
+    } finally {
+      rl.close()
     }
   }
 

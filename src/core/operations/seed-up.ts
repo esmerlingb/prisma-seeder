@@ -1,10 +1,10 @@
 import { PrismaSeederOptions } from '../prisma-seeder'
 import { SeedsService } from '../seeds.service'
-import { PrismaClientLike } from '../types'
-import { GetSeedsInputs, PrismaSeedModule, SeedOperation } from './types'
-import { validateModule } from './utils'
+import { SeederClient } from '../types'
+import { GetSeedsInputs, SeedOperation } from './types'
+import { importSeed } from './utils'
 
-export class SeedUp<T extends PrismaClientLike> implements SeedOperation {
+export class SeedUp<T extends SeederClient> implements SeedOperation {
   constructor(
     private readonly options: PrismaSeederOptions<T>,
     private readonly seedsService: SeedsService
@@ -35,8 +35,7 @@ export class SeedUp<T extends PrismaClientLike> implements SeedOperation {
   async handleSeed(path: string): Promise<void> {
     const seed = this.seedsService.getSeedNameFrom(path)
     console.log('Running seed: %s', seed)
-    const seedModule: PrismaSeedModule<T> = await import(path)
-    validateModule(seedModule)
+    const seedModule = await importSeed<T>(path)
     await seedModule.up(this.options.client)
     await this.seedsService.createSeed(seed)
     console.log('Seed %s executed successfully\n', seed)

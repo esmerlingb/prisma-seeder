@@ -5,7 +5,7 @@
     "target": "ES2022",
     "lib": ["ES2022"],
     "declaration": true,
-    "removeComments": true,
+    "removeComments": false,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,

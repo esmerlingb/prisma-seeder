@@ -1,4 +1,4 @@
-import { PrismaClientLike } from '../types'
+import { SeederClient } from '../types'
 
 export interface GetSeedsInputs {
   name?: string[]
@@ -6,12 +6,12 @@ export interface GetSeedsInputs {
   dir?: string
 }
 
-export interface PrismaSeedModule<T extends PrismaClientLike> {
+export interface PrismaSeedModule<T extends SeederClient> {
   up: (client: T) => Promise<void>
   down: (client: T) => Promise<void>
 }
 
-export interface SeedOperationOptions<T extends PrismaClientLike> {
+export interface SeedOperationOptions<T extends SeederClient> {
   client: T
   seeds: string
 }
