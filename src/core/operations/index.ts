@@ -1,5 +1,5 @@
 import { SeedsService } from '../seeds.service'
-import { PrismaClientLike } from '../types'
+import { SeederClient } from '../types'
 import { SeedDown } from './seed-down'
 import { SeedGenerate } from './seed-generate'
 import { SeedRefresh } from './seed-refresh'
@@ -9,11 +9,11 @@ import { SeedOperation, SeedOperationOptions } from './types'
 
 export type SeedOperationType = 'up' | 'down' | 'refresh' | 'reset' | 'generate'
 
-export const getSeedOperation = <T extends PrismaClientLike>(
+export const getSeedOperation = <T extends SeederClient>(
   operation: SeedOperationType,
-  options: SeedOperationOptions<T>
+  options: SeedOperationOptions<T>,
+  seedsService: SeedsService
 ): SeedOperation => {
-  const seedsService = new SeedsService(options.client)
   switch (operation) {
     case 'up':
       return new SeedUp(options, seedsService)

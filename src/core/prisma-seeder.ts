@@ -1,10 +1,14 @@
 import { Command } from 'commander'
 import { getSeedOperation, SeedOperationType } from './operations'
-import { PrismaClientLike } from './types'
+import { createSeedStore, SeedStore } from './seed-store'
+import { SeedsService } from './seeds.service'
+import { SeederClient } from './types'
 
-export interface PrismaSeederOptions<T extends PrismaClientLike> {
+export interface PrismaSeederOptions<T extends SeederClient> {
   client: T
   seeds: string
+  /** Contents of the files created by the `generate` command */
+  template?: string
 }
 
 interface CommandOptions {
@@ -13,10 +17,13 @@ interface CommandOptions {
   dir?: string
 }
 
-export class PrismaSeeder<T extends PrismaClientLike> {
+export class PrismaSeeder<T extends SeederClient> {
   private readonly program = new Command()
+  private readonly store: SeedStore
 
   constructor(private readonly options: PrismaSeederOptions<T>) {
+    this.store = createSeedStore(options.client)
+
     this.program
       .command('up')
       .description('Applies pending seeds')
@@ -57,12 +64,13 @@ export class PrismaSeeder<T extends PrismaClientLike> {
     try {
       await this.program.parseAsync(process.argv)
     } finally {
-      this.options.client.$disconnect()
+      await this.store.close()
     }
   }
 
   private async handleOperation(operation: SeedOperationType, options: CommandOptions) {
-    const seedOperation = getSeedOperation(operation, this.options)
+    const seedsService = new SeedsService(this.store, this.options.template)
+    const seedOperation = getSeedOperation(operation, this.options, seedsService)
     return await seedOperation.run(options)
   }
 }
