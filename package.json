@@ -24,6 +24,7 @@
   },
   "scripts": {
     "build": "tsdown",
+    "prepublishOnly": "tsc && pnpm build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "files": [
