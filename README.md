@@ -336,7 +336,7 @@ Options:
 
 ### Generate seeds: `generate`
 
-Creates a seed file named `<timestamp>_<name>.ts`. Spaces and dashes in the name become underscores. It saves the file in the folder of your `seeds` glob pattern, or in `--dir`. Without `--name`, it asks for one.
+Creates a seed file named `<timestamp>_<name>.ts`. Spaces and dashes in the name become underscores. It saves the file in the folder of your `seeds` glob pattern (the first one, if you pass a list), or in `--dir`. Without `--name`, it asks for one.
 
 ```bash
 tsx prisma/seed.ts generate --name add_categories
@@ -605,6 +605,27 @@ tsx prisma/seed.test.ts down
 > **Note:** Keep the glob patterns one level deep, such as `seeds/*.ts`. A recursive pattern such as `seeds/**/*.ts` also matches the `test` folder, and test seeds would then run everywhere. Seeds run in timestamp order within each script, not across scripts.
 
 Use the same pattern for any other environment, such as a `seeds/production` folder with a `seed.production.ts` script.
+
+### One script for every environment
+
+`seeds` also takes a list of glob patterns. Instead of one script per environment, you can keep a single `seed.ts` and pick the patterns from an environment variable:
+
+```ts
+// prisma/seed.ts
+const shared = path.join(__dirname, './seeds/*.{ts,js}')
+const test = path.join(__dirname, './seeds/test/*.{ts,js}')
+
+const seeder = new PrismaSeeder({
+  client: db,
+  seeds: process.env.NODE_ENV === 'test' ? [shared, test] : shared
+})
+```
+
+```bash
+NODE_ENV=test tsx prisma/seed.ts up
+```
+
+The seeds of every pattern run together in timestamp order, and a file matched by several patterns runs once. Commands such as `down` work on every seed the patterns match, so `down` in the test environment can revert a shared seed. `generate` saves new seeds in the folder of the first pattern unless you pass `--dir`.
 
 ## Troubleshooting
 

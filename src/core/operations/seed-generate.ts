@@ -14,7 +14,8 @@ export class SeedGenerate<T extends SeederClient> implements SeedOperation {
   ) {}
 
   async run({ name, dir }: GetSeedsInputs): Promise<void> {
-    const seedsPath = dir ?? path.dirname(this.options.seeds)
+    const [pattern] = [this.options.seeds].flat()
+    const seedsPath = dir ?? path.dirname(pattern)
     const rawNames = name ?? [await this.askName()]
 
     for (const rawName of rawNames) {

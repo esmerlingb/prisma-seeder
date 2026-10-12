@@ -6,7 +6,7 @@ import { SeederClient } from './types'
 
 export interface PrismaSeederOptions<T extends SeederClient> {
   client: T
-  seeds: string
+  seeds: string | string[]
   /** Contents of the files created by the `generate` command */
   template?: string
 }

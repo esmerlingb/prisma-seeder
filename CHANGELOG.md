@@ -4,6 +4,12 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-10-12
+
+### Added
+
+- `seeds` accepts a list of glob patterns, such as shared seeds plus test seeds. Matched seeds run once each, in timestamp order across all patterns. `generate` saves new seeds in the folder of the first pattern.
+
 ## [2.0.1] - 2026-10-10
 
 ### Added
@@ -66,5 +72,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 2. If you run `down --name` with several names and only expect the latest one to be reverted, add `--steps 1`.
 3. Replace any deep import of `prisma-seeder/...` with `prisma-seeder`.
 
+[2.1.0]: https://github.com/esmerlingb/prisma-seeder/releases/tag/v2.1.0
 [2.0.1]: https://github.com/esmerlingb/prisma-seeder/releases/tag/v2.0.1
 [2.0.0]: https://github.com/esmerlingb/prisma-seeder/releases/tag/v2.0.0

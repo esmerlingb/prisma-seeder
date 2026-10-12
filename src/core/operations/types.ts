@@ -13,7 +13,7 @@ export interface PrismaSeedModule<T extends SeederClient> {
 
 export interface SeedOperationOptions<T extends SeederClient> {
   client: T
-  seeds: string
+  seeds: string | string[]
 }
 
 export interface SeedOperation {

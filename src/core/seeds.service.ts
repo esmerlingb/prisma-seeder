@@ -20,7 +20,7 @@ export class SeedsService {
     return await this.store.list()
   }
 
-  async getSeedPaths(pattern: string, order: 'desc' | 'asc'): Promise<string[]> {
+  async getSeedPaths(pattern: string | string[], order: 'desc' | 'asc'): Promise<string[]> {
     // Lets Windows patterns built with path.join use backslashes as separators
     const seedPaths = await glob(pattern, { windowsPathsNoEscape: true })
 
